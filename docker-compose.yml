@@ -1,0 +1,30 @@
+version: '2'
+services:
+  webserver:
+    image: "glagola/yii2-advanced-nginx:latest"
+    depends_on:
+      - fpm
+    volumes: 
+      - ./app:/var/www/html
+    ports:
+      - "80:80"
+  fpm:
+    container_name: "php-fpm"
+    image: "glagola/yii2-advanced-php-fpm:latest"
+    depends_on:
+      - database
+    volumes: 
+      - ./app:/var/www/html
+    environment:
+      COMPOSER_CACHE_DIR: ./.composer
+      XDEBUG_CONFIG: "remote_host=192.168.1.144 remote_port=9002"
+  database:
+    container_name: "mysql"
+    image: "mysql:latest"
+    volumes:
+     - ./database:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_DATABASE: yii2advanced

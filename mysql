@@ -1,0 +1,10 @@
+#!/bin/bash
+
+CONTAINER="$(docker ps -q -f "name=mysql")"
+
+if [[ -z $CONTAINER ]]; then
+  echo "Please start MySQL container first"
+  exit 1
+fi
+
+docker exec -it -u $(id -u):$(id -g) $CONTAINER /bin/sh -c "mysql -uroot $@"
